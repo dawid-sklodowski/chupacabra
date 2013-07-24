@@ -8,4 +8,6 @@ Gem::Specification.new do |s|
   s.email       = 'dawid.sklodowski@gmail.com'
   s.files       = ["lib/chupacabra.rb"]
   s.homepage    = 'http://github.com/dawid-sklodowski/chupacabra'
+
+  s.add_development_dependency 'rspec'
 end
