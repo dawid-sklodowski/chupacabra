@@ -10,4 +10,5 @@ Gem::Specification.new do |s|
   s.homepage    = 'http://github.com/dawid-sklodowski/chupacabra'
 
   s.add_development_dependency 'rspec'
+  s.add_development_dependency 'rake'
 end
