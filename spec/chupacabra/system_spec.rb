@@ -21,4 +21,11 @@ describe Chupacabra::System do
       subject.should == password
     end
   end
+
+  describe 'clipboard operations' do
+    it 'saves and loads from clipboard' do
+      described_class.set_clipboard('testing clipboard')
+      described_class.get_clipboard.should == 'testing clipboard'
+    end
+  end
 end

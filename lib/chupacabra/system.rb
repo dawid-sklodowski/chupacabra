@@ -18,6 +18,15 @@ module Chupacabra
       `launchctl unsetenv #{PASSWORD_VARIABLE}`
     end
 
+    def get_clipboard
+      `pbpaste`.strip
+    end
+
+    def set_clipboard(text)
+      raise 'Unsupported string' if text =~ /'/
+      `echo '#{text}' | pbcopy`
+    end
+
     private
 
     def get_password_from_dialog
