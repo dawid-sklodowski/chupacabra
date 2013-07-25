@@ -15,7 +15,7 @@ module Chupacabra
     end
 
     def clear
-      `launchctl unsetenv #{PASSWORD_VARIABLE}`
+      `launchctl unsetenv #{PASSWORD_VARIABLE}` if osx?
     end
 
     def get_clipboard
@@ -25,6 +25,14 @@ module Chupacabra
     def set_clipboard(text)
       raise 'Unsupported string' if text =~ /'/
       `echo '#{text}' | pbcopy`
+    end
+
+    def osx?
+      `uname`.strip == 'Darwin'
+    end
+
+    def linux?
+      `uname`.strip == 'Linux'
     end
 
     private
