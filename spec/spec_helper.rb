@@ -1,6 +1,8 @@
 require 'chupacabra'
 require 'pry'
 
+ENV['CHUPACABRA_ENV'] = 'TEST'
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
 

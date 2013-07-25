@@ -3,7 +3,7 @@ require 'base64'
 module Chupacabra
   module System
     extend self
-    PASSWORD_VARIABLE = 'CHUPACABRA_PASS'
+    PASSWORD_VARIABLE = ENV['CHUPACABRA_ENV'] == 'TEST' ? 'CHUPACABRA' : 'CHUPACABRA_TEST'
 
 
     def get_password
@@ -57,11 +57,11 @@ module Chupacabra
     def get_env_password
       password64 = `launchctl getenv #{PASSWORD_VARIABLE}`.strip
       return if password64.empty?
-      Base64.strict_decode64(password64)
+      Base64.decode64(password64).strip
       end
 
     def set_env_password(password)
-      `launchctl setenv #{PASSWORD_VARIABLE} '#{Base64.strict_encode64(password)}'`
+      `launchctl setenv #{PASSWORD_VARIABLE} '#{Base64.encode64(password).strip}'`
     end
   end
 end
