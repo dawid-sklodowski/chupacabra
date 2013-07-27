@@ -1,4 +1,34 @@
 #!/usr/bin/env ruby
 require 'chupacabra'
+require 'optparse'
+require 'ostruct'
 
-puts Chupacabra.get_password
+
+options = OpenStruct.new
+
+# Defaults
+options.verbose = false
+
+OptionParser.new do |opts|
+  opts.banner = "Usage: chupacabra [options]"
+
+  opts.on("-v", "--verbose", "Prints password") do |port|
+    options.verbose = true
+  end
+
+  opts.on("-V", "--version", "Output version") do |address|
+    puts Chupacabra::VERSION
+    exit
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit
+  end
+end.parse!(ARGV)
+
+if options.verbose
+  puts Chupacabra.get_password
+else
+  Chupacabra.get_password
+end

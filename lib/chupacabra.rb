@@ -1,6 +1,7 @@
 require 'chupacabra/system'
 require 'chupacabra/crypto'
 require 'chupacabra/storage'
+require 'chupacabra/version'
 
 module Chupacabra
   extend self
