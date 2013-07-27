@@ -33,7 +33,44 @@ module Chupacabra
       `uname`.strip == 'Linux'
     end
 
+    def front_app
+      run_script(
+        <<-EOS
+          tell application "System Events"
+            return name of first application process whose frontmost is true
+          end tell
+        EOS
+      )
+    end
+
+    def get_browser_url
+      run_script(
+        case front_app
+          when 'Google Chrome', 'Google Chrome Canary'
+            'tell application "#{front_app}" to return URL of active tab of front window'
+          when 'Camino'
+            'tell application "#{front_app}" to return URL of current tab of front browser window'
+          when 'Safari', 'Webkit', 'Opera'
+            'tell application "#{front_app}" to return URL of front document'
+          else
+            <<-EOS
+              tell application "System Events"
+                keystroke "l" using command down
+                keystroke "c" using command down
+              end tell
+              delay 0.1
+              return the clipboard
+            EOS
+        end
+      )
+    end
+
     private
+
+    def run_script(script)
+      raise ArgumentError, "Script can't contain single quotes" if script =~ /'/
+      `osascript #{script.split("\n").collect{|line| " -e '#{line.strip}'"}.join}`.strip
+    end
 
     def password_variable
       Chupacabra.test? ? 'CHUPACABRA' : 'CHUPACABRA_TEST'
@@ -53,7 +90,14 @@ module Chupacabra
         'with title "Chupacabra"' +
         'with icon caution with hidden answer'
 
-      `osascript -e 'tell application "Finder"' -e "activate"  -e '#{dialog}' -e 'end tell'`
+      script = <<-EOS
+        tell application "#{front_app}"
+          activate
+          #{dialog}
+        end tell
+      EOS
+
+      run_script(script)
     end
 
     def get_env_password

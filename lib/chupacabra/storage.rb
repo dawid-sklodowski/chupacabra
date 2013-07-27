@@ -16,11 +16,11 @@ module Chupacabra
     end
 
     def [](key)
-      data[extract(key)]
+      data[key]
     end
 
     def []=(key, value)
-      data[extract(key)] = value
+      data[key] = value
       save
     end
 
@@ -46,14 +46,6 @@ module Chupacabra
     def save
       File.open(self.class.filepath, 'w') do |file|
         file <<  Crypto.encrypt(Marshal.dump(@data), @password)
-      end
-    end
-
-    def extract(key)
-      if key =~ /https?\:\/\/(?:www.)?([^\/\?]+)/
-        $1
-      else
-        raise ArgumentError, "#{key} doesn't look like url"
       end
     end
   end

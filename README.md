@@ -5,3 +5,6 @@ chupacabra
 [![Build Status](https://travis-ci.org/dawid-sklodowski/chupacabra.png)](https://travis-ci.org/dawid-sklodowski/chupacabra)
 
 Personal crypto pass 
+
+### Installation
+sudo gem install chupacabra

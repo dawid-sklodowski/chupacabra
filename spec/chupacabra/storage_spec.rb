@@ -19,18 +19,14 @@ describe Chupacabra::Storage do
     subject { Chupacabra::Storage.new('password') }
 
     describe '#[], #[]=' do
-      it 'does not allow non url keys' do
-        expect{ subject['key'] = 'value' }.to raise_error(ArgumentError)
-      end
-
       it 'works like a hash' do
-        subject['http://key'] = 'value'
-        subject['http://key'].should == 'value'
+        subject['key'] = 'value'
+        subject['key'].should == 'value'
       end
 
       it 'saves to encrypted file' do
         Chupacabra::Storage.filepath.should_not be_exist
-        subject['http://key'] = 'value'
+        subject['key'] = 'value'
         contents = Chupacabra::Storage.filepath.read
         contents.length.should > 0
         contents.should_not =~ /value/
@@ -38,30 +34,22 @@ describe Chupacabra::Storage do
       end
 
       it 'saves to file which is loaded by another instance' do
-        subject['http://key'] = 'value'
-        Chupacabra::Storage.new('password')['http://key'].should == 'value'
+        subject['key'] = 'value'
+        Chupacabra::Storage.new('password')['key'].should == 'value'
       end
 
       it 'cat read contents when initialized with wrong password' do
-        subject['http://key'] = 'value'
+        subject['key'] = 'value'
         expect {
-          Chupacabra::Storage.new('wrong password')['http://key']
+          Chupacabra::Storage.new('wrong password')['key']
         }.to raise_error(Chupacabra::Crypto::WrongPassword)
       end
 
       it 'returns nil if no value' do
-        subject['http://key'].should be_nil
+        subject['key'].should be_nil
       end
 
-      it 'matches http and https keys' do
-        subject['http://key'] = 'value'
-        subject['https://key'].should == 'value'
-      end
 
-      it 'matches domains with or without "www"' do
-        subject['http://www.key'] = 'value'
-        subject['http://key'].should == 'value'
-      end
     end
 
     describe '#to_h' do
@@ -70,7 +58,7 @@ describe Chupacabra::Storage do
       end
 
       it 'returns hash with passwords' do
-        subject['http://key'] = 'value'
+        subject['key'] = 'value'
         subject.to_h.should == {
           'key' => 'value'
         }
