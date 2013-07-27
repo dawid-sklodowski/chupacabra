@@ -26,9 +26,5 @@ describe Chupacabra::Crypto do
         Chupacabra::Crypto.decrypt(encrypted, 'wrong password')
       }.to raise_error(Chupacabra::Crypto::WrongPassword)
     end
-
-    it 'shows list of ciphers' do
-      puts OpenSSL::Cipher.ciphers
-    end
   end
 end
