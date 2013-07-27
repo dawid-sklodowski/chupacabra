@@ -25,7 +25,7 @@ module Chupacabra
   private
 
   def output(text)
-    System.set_clipboard(text)
+    System.set_clipboard(text) if System.osx?
     text
   end
 

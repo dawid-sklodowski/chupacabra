@@ -3,7 +3,6 @@ require 'spec_helper'
 describe Chupacabra do
   describe '.get_password' do #Rename this method
     before do
-      pending 'Works on MacOS only' unless Chupacabra::System.osx?
       Chupacabra::System.stub(:get_password => 'password')
     end
 
@@ -21,6 +20,7 @@ describe Chupacabra do
     end
 
     it 'stores password in clipboard' do
+      pending 'Works on MacOS only' unless Chupacabra::System.osx?
       Chupacabra::System.stub(:get_browser_url => 'http://key')
       password = Chupacabra.get_password
       Chupacabra::System.get_clipboard.should == password
