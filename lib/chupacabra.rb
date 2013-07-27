@@ -6,7 +6,7 @@ module Chupacabra
   extend self
   attr_accessor :env
 
-  def go
+  def get_password
     data = Storage.new(System.get_password)
     key = System.get_clipboard
     if data[key]
@@ -25,6 +25,6 @@ module Chupacabra
 
   def output(text)
     System.set_clipboard(text)
-    puts text
+    text
   end
 end

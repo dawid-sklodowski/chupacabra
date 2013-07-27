@@ -1,2 +1,4 @@
 #!/usr/bin/env ruby
-puts 'I am alive!'
+require 'chupacabra'
+
+puts Chupacabra.get_password
