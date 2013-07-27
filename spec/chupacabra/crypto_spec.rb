@@ -19,5 +19,12 @@ describe Chupacabra::Crypto do
       decrypted.should == 'This is test'
       decrypted.should_not == encrypted
     end
+
+    it 'raises error when wrong password' do
+      encrypted = Chupacabra::Crypto.encrypt('This is test', 'good password')
+      expect{
+        Chupacabra::Crypto.decrypt(encrypted, 'wrong password')
+      }.to raise_error(Chupacabra::Crypto::WrongPassword)
+    end
   end
 end

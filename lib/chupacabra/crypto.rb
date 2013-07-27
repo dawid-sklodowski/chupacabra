@@ -3,6 +3,9 @@ require 'base64'
 
 module Chupacabra
   module Crypto
+
+    class WrongPassword < StandardError; end
+
     extend self
     PASSWORD_LENGTH = 32
 
@@ -19,6 +22,9 @@ module Chupacabra
       decrypter.decrypt
       decrypter.pkcs5_keyivgen password
       decrypter.update(encrypted) + decrypter.final
+
+    rescue OpenSSL::Cipher::CipherError
+      raise WrongPassword, 'Wrong password'
     end
 
     def generate_password

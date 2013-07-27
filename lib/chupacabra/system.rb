@@ -3,8 +3,6 @@ require 'base64'
 module Chupacabra
   module System
     extend self
-    PASSWORD_VARIABLE = ENV['CHUPACABRA_ENV'] == 'TEST' ? 'CHUPACABRA' : 'CHUPACABRA_TEST'
-
 
     def get_password
       return get_env_password if get_env_password
@@ -15,7 +13,7 @@ module Chupacabra
     end
 
     def clear
-      `launchctl unsetenv #{PASSWORD_VARIABLE}` if osx?
+      `launchctl unsetenv #{password_variable}` if osx?
     end
 
     def get_clipboard
@@ -37,6 +35,10 @@ module Chupacabra
 
     private
 
+    def password_variable
+      Chupacabra.test? ? 'CHUPACABRA' : 'CHUPACABRA_TEST'
+    end
+
     def get_password_from_dialog
       strip_dialog_response(ask_for_password)
     end
@@ -55,13 +57,13 @@ module Chupacabra
     end
 
     def get_env_password
-      password64 = `launchctl getenv #{PASSWORD_VARIABLE}`.strip
+      password64 = `launchctl getenv #{password_variable}`.strip
       return if password64.empty?
       Base64.decode64(password64).strip
       end
 
     def set_env_password(password)
-      `launchctl setenv #{PASSWORD_VARIABLE} '#{Base64.encode64(password).strip}'`
+      `launchctl setenv #{password_variable} '#{Base64.encode64(password).strip}'`
     end
   end
 end
