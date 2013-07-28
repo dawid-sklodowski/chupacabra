@@ -12,7 +12,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Dawid Sklodowski"]
   s.email       = 'dawid.sklodowski@gmail.com'
   s.files       = Dir.glob('bin/**/*') +
-                  Dir.glob('lib/**/*')
+                  Dir.glob('lib/**/*') +
+                  Dir.glob('osx/**/*')
   s.homepage    = 'http://github.com/dawid-sklodowski/chupacabra'
   s.license     = 'MIT'
 
@@ -26,5 +27,7 @@ Gem::Specification.new do |s|
     To hook chupacabra into your MacOS please issue command:
 
     chupacabra --install
+    --------------------
+
   EOS
 end

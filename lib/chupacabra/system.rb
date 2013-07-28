@@ -9,7 +9,7 @@ module Chupacabra
 
     def get_password
       return get_env_password unless get_env_password.empty?
-      password = get_password_from_dialog
+      password = Digest::SHA1.hexdigest(get_password_from_dialog)
       raise "Password can't be empty" if !password || password.empty?
       set_env_password(password)
       password
@@ -113,7 +113,7 @@ module Chupacabra
     end
 
     def password_variable
-      Chupacabra.test? ? 'CHUPACABRA' : 'CHUPACABRA_TEST'
+      Chupacabra.test? ? 'CHUPACABRA_TEST' : 'CHUPACABRA'
     end
 
     def get_password_from_dialog
@@ -145,7 +145,7 @@ module Chupacabra
     end
 
     def set_env_password(password)
-      `launchctl setenv #{password_variable} '#{Digest::SHA1.hexdigest(password)}'`
+      `launchctl setenv #{password_variable} '#{password}'`
     end
   end
 end

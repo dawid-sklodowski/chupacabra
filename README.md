@@ -12,7 +12,7 @@ Currently it works with MacOs only
 
 
 ### Installation
-```sudo gem install chupacabra``` # Install gem
+```sudo /usr/bin/gem install chupacabra``` # Install gem
 
 ```chupacabra --install``` # Hook chupacabra into MacOs
 

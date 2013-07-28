@@ -13,14 +13,14 @@ describe Chupacabra::System do
   describe '.get password' do
     subject { described_class.get_password }
 
-    it 'returns password' do
-      subject.should == password
+    it 'returns password sha1 hash' do
+      subject.should == Digest::SHA1.hexdigest(password)
     end
 
     it 'stores once provided password as SHA1' do
-      described_class.get_password
+      password = described_class.get_password
       described_class.stub(:ask_for_password =>  "Something different")
-      subject.should == Digest::SHA1.hexdigest(password)
+      subject.should == password
     end
   end
 
