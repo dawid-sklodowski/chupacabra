@@ -1,5 +1,9 @@
+require 'coveralls'
+Coveralls.wear!
+
 require 'chupacabra'
 require 'pry'
+
 
 Chupacabra.env = 'test'
 
