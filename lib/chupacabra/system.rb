@@ -47,14 +47,15 @@ module Chupacabra
     end
 
     def get_browser_url
+      app = front_app
       run_script(
-        case front_app
+        case app
           when 'Google Chrome', 'Google Chrome Canary'
-            'tell application "#{front_app}" to return URL of active tab of front window'
+            %Q(tell application "#{app}" to return URL of active tab of front window)
           when 'Camino'
-            'tell application "#{front_app}" to return URL of current tab of front browser window'
+            %Q(tell application "#{app}" to return URL of current tab of front browser window)
           when 'Safari', 'Webkit', 'Opera'
-            'tell application "#{front_app}" to return URL of front document'
+            %Q(tell application "#{app}" to return URL of front document)
           else
             <<-EOS
               tell application "System Events"
@@ -103,6 +104,19 @@ module Chupacabra
       else
         Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
       end
+    end
+
+    def log(message)
+      return unless Chupacabra.log
+      log_path.open('a') do |file|
+        file << message
+        file << "\n"
+      end
+      message
+    end
+
+    def log_path
+      (Pathname.new(ENV['HOME']) + 'chupacabra.log')
     end
 
     private

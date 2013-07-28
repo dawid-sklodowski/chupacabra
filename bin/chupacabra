@@ -30,6 +30,11 @@ OptionParser.new do |opts|
     exit
   end
 
+  opts.on("-l", "--log", "Turns on logging to #{Chupacabra::System.log_path}") do |port|
+    Chupacabra.log = true
+    puts "Logging into #{Chupacabra::System.log_path}"
+  end
+
   opts.on("-u", "--uninstall", "Uninstall Apple service") do |port|
     Chupacabra::System.uninstall
     puts "Service removed from #{Chupacabra::System.user_service_path}"

@@ -16,4 +16,4 @@ Currently it works with MacOs only
 
 ```chupacabra --install``` # Hook chupacabra into MacOs
 
-```System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra``` # Create Keyboard Shortcut (I like cmd-K)
+```System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra``` # Create Keyboard Shortcut (cmd-K works with most browsers)
