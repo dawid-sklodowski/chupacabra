@@ -16,6 +16,11 @@ module Chupacabra
       data[key] = Crypto.generate_password
       output(data[key])
     end
+
+  rescue Chupacabra::Crypto::WrongPassword
+    System.clear
+    System.alert('Wrong password!')
+    'Wrong password'
   end
 
   def test?

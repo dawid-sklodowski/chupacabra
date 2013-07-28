@@ -65,6 +65,17 @@ module Chupacabra
       )
     end
 
+    def alert(message)
+      run_script(
+        <<-EOS
+          tell application "#{front_app}"
+            activate
+            display alert "#{message}" as warning
+          end tell
+        EOS
+      )
+    end
+
     private
 
     def run_script(script)
@@ -104,7 +115,7 @@ module Chupacabra
       password64 = `launchctl getenv #{password_variable}`.strip
       return if password64.empty?
       Base64.decode64(password64).strip
-      end
+    end
 
     def set_env_password(password)
       `launchctl setenv #{password_variable} '#{Base64.encode64(password).strip}'`

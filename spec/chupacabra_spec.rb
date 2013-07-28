@@ -4,16 +4,15 @@ describe Chupacabra do
   describe '.get_password' do #Rename this method
     before do
       Chupacabra::System.stub(:get_password => 'password')
+      Chupacabra::System.stub(:get_browser_url => 'http://www.key')
     end
 
     it 'returns same password for same key' do
-      Chupacabra::System.stub(:get_browser_url => 'http://key')
       password = Chupacabra.get_password
       Chupacabra.get_password == password
     end
 
     it 'returns different password for different key' do
-      Chupacabra::System.stub(:get_browser_url => 'http://key')
       password = Chupacabra.get_password
       Chupacabra::System.stub(:get_browser_url => 'http://key2')
       Chupacabra.get_password.should_not == password
@@ -21,20 +20,17 @@ describe Chupacabra do
 
     it 'stores password in clipboard' do
       pending 'Works on MacOS only' unless Chupacabra::System.osx?
-      Chupacabra::System.stub(:get_browser_url => 'http://key')
       password = Chupacabra.get_password
       Chupacabra::System.get_clipboard.should == password
     end
 
     it 'returns same password for http and https urls' do
-      Chupacabra::System.stub(:get_browser_url => 'http://key')
       password = Chupacabra.get_password
       Chupacabra::System.stub(:get_browser_url => 'https://key')
       Chupacabra.get_password.should == password
     end
 
     it 'returns same password for domains with or without www' do
-      Chupacabra::System.stub(:get_browser_url => 'http://www.key')
       password = Chupacabra.get_password
       Chupacabra::System.stub(:get_browser_url => 'https://key')
       Chupacabra.get_password.should == password
@@ -52,6 +48,21 @@ describe Chupacabra do
       Chupacabra::System.stub(:front_app => 'Chupacabra')
       password = Chupacabra.get_password
       Chupacabra::Storage.new(Chupacabra::System.get_password)['app: Chupacabra'].should == password
+    end
+
+    it 'gives alert on wrong password' do
+      Chupacabra.get_password
+      Chupacabra::System.stub(:get_password => 'wrong password')
+      Chupacabra::System.should_receive(:alert)
+      Chupacabra.get_password
+    end
+
+    it 'clears password system variable on wrong password' do
+      Chupacabra.get_password
+      Chupacabra::System.stub(:get_password => 'wrong password')
+      Chupacabra::System.stub(:alert)
+      Chupacabra::System.should_receive(:clear).at_least(1).times
+      Chupacabra.get_password
     end
   end
 end
