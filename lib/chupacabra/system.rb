@@ -56,7 +56,7 @@ module Chupacabra
             %Q(tell application "#{app}" to return URL of current tab of front browser window)
           when 'Safari', 'Webkit', 'Opera'
             %Q(tell application "#{app}" to return URL of front document)
-          else
+          when 'firefox'
             <<-EOS
               tell application "System Events"
                 keystroke "l" using command down
@@ -122,6 +122,7 @@ module Chupacabra
     private
 
     def run_script(script)
+      return unless script
       raise ArgumentError, "Script can't contain single quotes" if script =~ /'/
       `osascript #{script.split("\n").collect{|line| " -e '#{line.strip}'"}.join}`.strip
     end

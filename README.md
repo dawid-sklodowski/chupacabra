@@ -17,3 +17,8 @@ Currently it works with MacOs only
 ```chupacabra --install``` # Hook chupacabra into MacOs
 
 ```System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra``` # Create Keyboard Shortcut (cmd-K works with most browsers)
+
+### Usage
+While being in your browser or other application press keyboard shortcut that you assigned to chupacabra.
+It will find fetch your password into clipboard from encrypted password storage or generate a new one for you.
+Having your password in clipboard press cmd-V to paste it.

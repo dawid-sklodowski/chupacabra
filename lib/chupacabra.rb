@@ -38,6 +38,7 @@ module Chupacabra
   end
 
   def extract_url(key)
+    return unless key
     "web: #{$1}" if key =~ /https?\:\/\/(?:www.)?([^\/\?]+)/
   end
 end
