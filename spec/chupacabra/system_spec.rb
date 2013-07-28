@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'digest'
 
 describe Chupacabra::System do
 
@@ -16,10 +17,10 @@ describe Chupacabra::System do
       subject.should == password
     end
 
-    it 'stores once provided password' do
+    it 'stores once provided password as SHA1' do
       described_class.get_password
       described_class.stub(:ask_for_password =>  "Something different")
-      subject.should == password
+      subject.should == Digest::SHA1.hexdigest(password)
     end
   end
 

@@ -1,11 +1,12 @@
 require 'base64'
+require 'digest'
 
 module Chupacabra
   module System
     extend self
 
     def get_password
-      return get_env_password if get_env_password
+      return get_env_password unless get_env_password.empty?
       password = get_password_from_dialog
       raise "Password can't be empty" if !password || password.empty?
       set_env_password(password)
@@ -112,13 +113,11 @@ module Chupacabra
     end
 
     def get_env_password
-      password64 = `launchctl getenv #{password_variable}`.strip
-      return if password64.empty?
-      Base64.decode64(password64).strip
+      `launchctl getenv #{password_variable}`.strip
     end
 
     def set_env_password(password)
-      `launchctl setenv #{password_variable} '#{Base64.encode64(password).strip}'`
+      `launchctl setenv #{password_variable} '#{Digest::SHA1.hexdigest(password)}'`
     end
   end
 end
