@@ -20,4 +20,11 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rake'
   s.add_development_dependency 'pry'
   s.executables = ['chupacabra']
+  s.post_install_message = <<-EOS
+    Thank you for installing chupacabra.
+
+    To hook chupacabra into your MacOS please issue command:
+
+    chupacabra --install
+  EOS
 end

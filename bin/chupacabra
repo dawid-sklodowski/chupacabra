@@ -14,6 +14,28 @@ options.verbose = false
 OptionParser.new do |opts|
   opts.banner = "Usage: chupacabra [options]"
 
+  opts.on("-c", "--clear", "Wipe out all your chupacabra passwords") do |port|
+    Chupacabra::Storage.clear
+    puts "Your chupacabra is a virgin now."
+    exit
+  end
+
+  opts.on("-i", "--install", "Install Apple service") do |port|
+    Chupacabra::System.install
+    puts "Service installed in #{Chupacabra::System.user_service_path}"
+    puts ""
+    puts "You can create keyboard shortcut with:"
+    puts "System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra"
+    puts ''
+    exit
+  end
+
+  opts.on("-u", "--uninstall", "Uninstall Apple service") do |port|
+    Chupacabra::System.uninstall
+    puts "Service removed from #{Chupacabra::System.user_service_path}"
+    exit
+  end
+
   opts.on("-v", "--verbose", "Prints password") do |port|
     options.verbose = true
   end
