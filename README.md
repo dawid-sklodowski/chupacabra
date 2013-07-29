@@ -20,5 +20,8 @@ Currently it works with MacOs only
 
 ### Usage
 While being in your browser or other application press keyboard shortcut that you assigned to chupacabra.
-It will find fetch your password into clipboard from encrypted password storage or generate a new one for you.
-Having your password in clipboard press cmd-V to paste it.
+It will paste your password for you (into field you have focused in).
+
+Password is being fetched into clipboard from encrypted password storage or new one is generated.
+
+Password stays in clipboard, so you can use ```cmd-v``` to paste your it anywhere.
