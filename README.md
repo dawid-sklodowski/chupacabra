@@ -25,4 +25,6 @@ It will paste your password for you (into field you have focused in).
 
 Password is being fetched into clipboard from encrypted password storage or new one is generated.
 
+For web browsers you will have one password stored per domain. For other applications -- one password per application.
+
 Password stays in clipboard, so you can use ```cmd-v``` to paste your it anywhere.
