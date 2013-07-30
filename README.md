@@ -13,23 +13,28 @@ Currently it works with MacOs only
 
 
 ### Installation
+Run in your terminal console
+
 ```sudo /usr/bin/gem install chupacabra``` # Install gem
 
 ```chupacabra --install``` # Hook chupacabra into MacOs
 
-```System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra``` # Create Keyboard Shortcut (cmd-K works with most browsers)
+Create Keyboard Shortcut (cmd-K works with Safari and Chrome)
+```System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra```
 
 ### Usage
-While being in your browser or other application press keyboard shortcut that you assigned to chupacabra.
+While being on website or in any application, you press assigned shortcut and chupacabra fetches your password from encrypted storage (or generate a new one) and pastes it for you (into field you have focused in).
 
-It will first ask you for your chupacabra global password and then paste your password for you (into field you have focused in).
+When running for the first time it will ask you for your chupacabra global password. Global password stays in memory until you restart your computer.
 
 ### How it works
-Global chupacabra password encrypts a file (~/.chupacabra), which stores all your passwords for applications and websites.
-Chupacabra will ask you only once for your global password until you restart your computer.
-
 When you press chupacabra keyboard shortcut, password is being fetched from encrypted storage or new one is generated
 
 For web browsers you will have one password stored per domain. For other applications -- one password per application.
 
 Password stays in clipboard, so you can use ```cmd-v``` to paste your it anywhere.
+
+Global password encrypts a file (~/.chupacabra), which stores all your passwords for applications and websites.
+Chupacabra will ask you only once for your global password until you restart your computer.
+
+
