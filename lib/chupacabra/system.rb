@@ -69,6 +69,10 @@ module Chupacabra
       )
     end
 
+    def paste_clipboard
+      run_script(%Q{tell application "System Events" to keystroke "v" using command down})
+    end
+
     def alert(message)
       run_script(
         <<-EOS

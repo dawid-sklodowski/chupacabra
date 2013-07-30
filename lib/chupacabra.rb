@@ -33,7 +33,10 @@ module Chupacabra
   private
 
   def output(text)
-    System.set_clipboard(text) if System.osx?
+    if System.osx?
+      System.set_clipboard(text)
+      System.paste_clipboard unless Chupacabra.test?
+    end
     text
   end
 
