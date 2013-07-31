@@ -120,7 +120,11 @@ module Chupacabra
     end
 
     def log_path
-      (Pathname.new(ENV['HOME']) + 'chupacabra.log')
+      if Chupacabra.test?
+        (Chupacabra.root + 'log' + 'chupacabra.log')
+      else
+        (Pathname.new(ENV['HOME']) + 'chupacabra.log')
+      end
     end
 
     private
@@ -128,6 +132,7 @@ module Chupacabra
     def run_script(script)
       return unless script
       raise ArgumentError, "Script can't contain single quotes" if script =~ /'/
+      return if Chupacabra.test? or !Chupacabra.osx?
       `osascript #{script.split("\n").collect{|line| " -e '#{line.strip}'"}.join}`.strip
     end
 

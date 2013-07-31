@@ -4,7 +4,11 @@ module Chupacabra
   class Storage
 
     def self.filepath
-      Pathname.new(ENV['HOME']) + filename
+      if Chupacabra.test?
+        Chupacabra.root + filename
+      else
+        Pathname.new(ENV['HOME']) + filename
+      end
     end
 
     def self.clear
@@ -31,7 +35,7 @@ module Chupacabra
     private
 
     def self.filename
-      Chupacabra.test? ? '.chupacabra_test' : '.chupacabra'
+      '.chupacabra'
     end
 
     def data

@@ -2,6 +2,7 @@ require 'chupacabra/system'
 require 'chupacabra/crypto'
 require 'chupacabra/storage'
 require 'chupacabra/version'
+require 'pathname'
 
 module Chupacabra
   extend self
@@ -28,6 +29,10 @@ module Chupacabra
 
   def test?
     env == 'test'
+  end
+
+  def root
+    Pathname.new(File.expand_path('../..', __FILE__))
   end
 
   private

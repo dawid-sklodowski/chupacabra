@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Chupacabra::Storage do
 
   describe '.filepath' do
-     it { Chupacabra::Storage.filepath.to_s.should == File.join(ENV['HOME'], '.chupacabra_test') }
+     it { Chupacabra::Storage.filepath.to_s.should == File.join(Chupacabra.root, '.chupacabra') }
   end
 
   describe '.clear' do
