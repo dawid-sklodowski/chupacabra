@@ -16,7 +16,6 @@ Gem::Specification.new do |s|
                   Dir.glob('osx/**/*')
   s.homepage    = 'http://github.com/dawid-sklodowski/chupacabra'
   s.license     = 'MIT'
-
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'pry'

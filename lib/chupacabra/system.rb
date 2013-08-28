@@ -8,6 +8,8 @@ module Chupacabra
   module System
     extend self
 
+    BROWSERS = ['Google Chrome', 'Google Chrome Canary', 'Camino', 'Safari', 'Webkit', 'Opera', 'Firefox']
+
     def get_password
       return get_env_password unless get_env_password.empty?
       password = Digest::SHA1.hexdigest(get_password_from_dialog)
@@ -43,6 +45,7 @@ module Chupacabra
 
     def get_browser_url
       app = front_app
+      return unless BROWSERS.include?(app)
       run_script(Scripts.get_browser_url(app))
     end
 
