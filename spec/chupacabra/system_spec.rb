@@ -7,7 +7,7 @@ describe Chupacabra::System do
 
   before do
     pending 'Works on MacOS only' unless Chupacabra::System.osx?
-    described_class.stub(:ask_for_password =>  "text returned:#{password}, button returned:OK\n")
+    described_class.stub(:ask_for_password =>  "«class ttxt»:#{password}, «class bhit»:OK\n")
   end
 
   describe '.get password' do
