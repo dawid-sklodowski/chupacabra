@@ -40,21 +40,21 @@ module Chupacabra
     end
 
     def front_app
-      run_script(Scripts.front_app)
+      run_script(:script => :front_app)
     end
 
     def get_browser_url
       app = front_app
       return unless BROWSERS.include?(app)
-      run_script(Scripts.get_browser_url(app))
+      run_script(:script => :get_browser_url, :compile_argument => app)
     end
 
     def paste_clipboard
-      run_script(System.paste_clipboard)
+      run_script(:script => :paste_clipboard)
     end
 
     def alert(message)
-      run_script(Scripts.alert(front_app, message))
+      run_script(:script => :alert, :arguments => [front_app, message])
     end
 
     def install
@@ -102,11 +102,18 @@ module Chupacabra
 
     private
 
-    def run_script(script)
-      return unless script
-      raise ArgumentError, "Script can't contain single quotes" if script =~ /'/
-      return if Chupacabra.test? or !Chupacabra.osx?
-      `osascript #{script.split("\n").collect{|line| " -e '#{line.strip}'"}.join}`.strip
+    def run_script(options ={})
+      script = options.fetch(:script)
+      compile_argument = options.fetch(:compile_argument, nil)
+      arguments = options.fetch(:arguments) { [] }
+
+      script_file = Chupacabra::System::Scripts.script_file(script, compile_argument)
+      script_file = Chupacabra::System::Scripts.compile(script, compile_arugment) unless File.exists?(script_file)
+      raise 'No script to execute' unless script_file
+      return if Chupacabra.test? or !Chupacabra::System.osx?
+      script = "osascript #{script_file} #{arguments.collect{ |arg| "'" + arg + "'" }.join(' ') }"
+      System.log(script)
+      `#{ script }`
     end
 
     def password_variable
@@ -118,11 +125,12 @@ module Chupacabra
     end
 
     def strip_dialog_response(response)
-      response.match(/text returned:(.+), button returned:OK/)[1]
+      System.log(response)
+      response.match(/.class ttxt.:(.+), .class bhit.:OK/)[1]
     end
 
     def ask_for_password
-      run_script(Scripts.ask_for_password(front_app))
+      run_script(:script => :ask_for_password, :arguments => [front_app])
     end
 
     def get_env_password

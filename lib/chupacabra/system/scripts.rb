@@ -4,13 +4,28 @@ module Chupacabra
       extend self
 
       def compile_all
-        [:front_app, :get_browser_url, :paste_clipboard, :alert, :ask_for_password].each do |script|
+        clear_scripts
+        [:front_app, :paste_clipboard, :alert, :ask_for_password].each do |script|
           compile(script)
+        end
+        Chupacabra::System::BROWSERS.each do |browser|
+          compile(:get_browser_url, browser)
         end
       end
 
-      def compile(script)
-        `osacompile -e '#{self.send(script)}' -o #{script_path(script)}`
+      def compile(script, argument = nil)
+        `osacompile -e '#{self.send(*[script, argument].compact)}' -o #{script_file(script, argument)}`
+        if $?.success?
+          return script_file(script, argument)
+        else
+          puts "Failed to compile: #{script_file(script, argument)}"
+          nil
+        end
+      end
+
+      def script_file(script, argument = nil)
+        argument = '_' + argument.downcase.gsub(/ /, '_') if argument
+        scripts_path + "#{script}#{argument}.scpt"
       end
 
       def front_app
@@ -21,28 +36,27 @@ module Chupacabra
         SCPT
       end
 
-      # Script requires argument: application name
-      def get_browser_url
-        <<-SCPT
-          on run argv
-            set _browser to item 1 of argv
-            if ({ "Google Chrome", "Google Chrome Canary" } contains _browser) then
-              tell application _browser to return URL of active tab of front window
-            else if (_browser = "Camino") then
-              tell application _browser to return URL of current tab of front _browser window
-            else if (_browser is contained by { "Safari", "Webkit", "Opera" }) then
-              tell application _browser to return URL of front document
-            else if (_browser = "firefox") then
-              tell application "System Events"
-                keystroke "l" using command down
-                keystroke "c" using command down
-              end tell
-              delay 0.1
-              return the clipboard
-            end if
-          end run
-        SCPT
+      def get_browser_url(app)
+        return unless BROWSERS.include?(app)
+        case app
+          when 'Google Chrome', 'Google Chrome Canary'
+            %Q(tell application "#{app}" to return URL of active tab of front window)
+          when 'Camino'
+            %Q(tell application "#{app}" to return URL of current tab of front browser window)
+          when 'Safari', 'Webkit', 'Opera'
+            %Q(tell application "#{app}" to return URL of front document)
+          when 'Firefox'
+            <<-EOS
+             tell application "System Events"
+               keystroke "l" using command down
+               keystroke "c" using command down
+             end tell
+             delay 0.1
+             return the clipboard
+           EOS
+        end
       end
+
 
       def paste_clipboard
         <<-SCPT
@@ -79,8 +93,12 @@ module Chupacabra
 
       private
 
-      def script_path(script)
-        Chupacabra.root + 'osx' + 'apple_scripts' + "#{script}.scpt"
+      def scripts_path
+        Chupacabra.root + 'osx' + 'apple_scripts'
+      end
+
+      def clear_scripts
+        Dir.glob(scripts_path + '*').each{ |file| Pathname.new(file).delete }
       end
     end
   end
