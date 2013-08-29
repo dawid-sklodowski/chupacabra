@@ -18,7 +18,7 @@ module Chupacabra
       else
         log(command)
         `#{command}`
-      end
+      end.strip
     end
 
     def get_password

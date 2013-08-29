@@ -60,4 +60,14 @@ describe Chupacabra::System do
       Chupacabra::System.user_service_path.should == Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
     end
   end
+
+  describe '.execute' do
+    it 'returns passed string in test' do
+      described_class.execute('Once upon a line').should == 'Once upon a line'
+    end
+
+    it 'executes command if true passed as second argument' do
+      described_class.execute('echo "Hacky"', true).should == 'Hacky'
+    end
+  end
 end
