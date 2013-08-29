@@ -1,11 +1,8 @@
-require 'chupacabra/system'
-require 'chupacabra/crypto'
-require 'chupacabra/storage'
-require 'chupacabra/version'
-require 'pathname'
-
 module Chupacabra
   extend self
+
+  class Error < StandardError; end
+
   attr_accessor :env
   attr_accessor :log
 
@@ -50,3 +47,10 @@ module Chupacabra
     "web: #{$1}" if key =~ /https?\:\/\/(?:www.)?([^\/\?]+)/
   end
 end
+
+require 'chupacabra/system'
+require 'chupacabra/system/scripts'
+require 'chupacabra/crypto'
+require 'chupacabra/storage'
+require 'chupacabra/version'
+require 'pathname'

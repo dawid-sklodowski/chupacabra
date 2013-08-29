@@ -2,13 +2,24 @@ require 'base64'
 require 'digest'
 require 'pathname'
 require 'fileutils'
-require 'chupacabra/system/scripts'
 
 module Chupacabra
   module System
     extend self
 
+    class Error < Chupacabra::Error; end
+
     BROWSERS = ['Google Chrome', 'Google Chrome Canary', 'Camino', 'Safari', 'Webkit', 'Opera', 'Firefox']
+
+    def execute(command, run_in_test = false)
+      log(command)
+      if Chupacabra.test? && !run_in_test
+        `echo '#{command.gsub(/'/, "\'")}'`
+      else
+        log(command)
+        `#{command}`
+      end
+    end
 
     def get_password
       return get_env_password unless get_env_password.empty?
@@ -19,16 +30,16 @@ module Chupacabra
     end
 
     def clear
-      `launchctl unsetenv #{password_variable}` if osx?
+      System.execute("launchctl unsetenv #{password_variable}")
     end
 
     def get_clipboard
-      `pbpaste`.strip
+      System.execute("pbpaste", true).strip
     end
 
     def set_clipboard(text)
       raise 'Unsupported string' if text =~ /'/
-      `echo '#{text}' | pbcopy`
+      System.execute("echo '#{text}' | pbcopy", true)
     end
 
     def osx?
@@ -94,7 +105,7 @@ module Chupacabra
 
     def log_path
       if Chupacabra.test?
-        (Chupacabra.root + 'log' + 'chupacabra.log')
+        (Chupacabra.root + 'log' + 'chupacabra_test.log')
       else
         (Pathname.new(ENV['HOME']) + 'chupacabra.log')
       end
@@ -109,8 +120,7 @@ module Chupacabra
       arguments = options.fetch(:arguments) { [] }
       script_file = Chupacabra::System::Scripts.script_or_compile(script, compile_argument)
       script = "osascript #{script_file} #{arguments.collect{ |arg| "'" + arg + "'" }.join(' ') }"
-      System.log(script)
-      `#{ script }`
+      System.execute(script)
     end
 
     def password_variable
@@ -131,11 +141,11 @@ module Chupacabra
     end
 
     def get_env_password
-      `launchctl getenv #{password_variable}`.strip
+      System.execute("launchctl getenv #{password_variable}", true).strip
     end
 
     def set_env_password(password)
-      `launchctl setenv #{password_variable} '#{password}'`
+      System.execute("launchctl setenv #{password_variable} '#{password}'", true)
     end
   end
 end

@@ -3,6 +3,8 @@ module Chupacabra
     module Scripts
       extend self
 
+      class Error < Chupacabra::System::Error; end
+
       def compile_all
         clear_scripts
         [:front_app, :paste_clipboard, :alert, :ask_for_password].each do |script|
@@ -14,24 +16,26 @@ module Chupacabra
       end
 
       def compile(script, argument = nil)
-        `osacompile -e '#{self.send(*[script, argument].compact)}' -o #{script_file(script, argument)}`
+        script_body = self.send(*[script, argument].compact)
+        raise Error, 'Empty script to compile' if script_body.empty?
+        output = System.execute "osacompile -e '#{script_body}' -o #{script_file(script, argument)}"
         if $?.success?
-          return script_file(script, argument)
+          output
         else
           puts "Failed to compile: #{script_file(script, argument)}"
+          puts output
           nil
         end
       end
 
-      def script_file(script, argument = nil)
-        argument = '_' + argument.downcase.gsub(/ /, '_') if argument
-        scripts_path + "#{script}#{argument}.scpt"
+      def script_or_compile(script, argument = nil)
+        file = script_file(script, argument)
+        return file if File.exist?(file)
+        compile(script, argument) or raise "Can't compile #{script}#{' with argument ' + argument if argument}"
+        file
       end
 
-      def script_or_compile(script, argument = nil)
-        return script_file(script, argument) if File.exist?(script_file(script, argument))
-        compile(script, argument) or raise "Can't compile #{script}#{' with arugment' + argument if argument}"
-      end
+      private
 
       def front_app
         <<-SCPT
@@ -59,6 +63,8 @@ module Chupacabra
              delay 0.1
              return the clipboard
            EOS
+          else
+            raise Error, "Uknown browser: #{app}"
         end
       end
 
@@ -96,7 +102,10 @@ module Chupacabra
         SCPT
       end
 
-      private
+      def script_file(script, argument = nil)
+        argument = '_' + argument.downcase.gsub(/ /, '_') if argument
+        scripts_path + "#{script}#{argument}.scpt"
+      end
 
       def scripts_path
         Chupacabra.root + 'osx' + 'apple_scripts'
