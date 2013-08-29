@@ -68,31 +68,7 @@ module Chupacabra
       run_script(:script => :alert, :arguments => [front_app, message])
     end
 
-    def install
-      user_service_contents = user_service_path + 'Contents'
-      user_service_contents.mkpath unless user_service_contents.exist?
-      chupacabra_service_contents = Pathname.new(
-        File.expand_path('../../../osx/Chupacabra.workflow/Contents', __FILE__)
-      )
 
-      %w(document.wflow Info.plist).each do |filename|
-        (user_service_contents + filename).open('w') do |file|
-          file << (chupacabra_service_contents + filename).read
-        end
-      end
-    end
-
-    def uninstall
-      FileUtils.rm_rf user_service_path
-    end
-
-    def user_service_path
-      if Chupacabra.test?
-        Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
-      else
-        Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
-      end
-    end
 
     def log(message)
       return unless Chupacabra.log

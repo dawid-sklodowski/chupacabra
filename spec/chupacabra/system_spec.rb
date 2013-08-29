@@ -43,24 +43,6 @@ describe Chupacabra::System do
     end
   end
 
-  describe 'uninstall' do
-    before do
-      Chupacabra::System.install
-    end
-
-    it 'deletes service directory' do
-      Chupacabra::System.user_service_path.should be_exist
-      Chupacabra::System.uninstall
-      Chupacabra::System.user_service_path.should_not be_exist
-    end
-  end
-
-  describe 'user_service_path' do
-    it 'is correct' do
-      Chupacabra::System.user_service_path.should == Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
-    end
-  end
-
   describe '.execute' do
     it 'returns passed string in test' do
       described_class.execute('Once upon a line').should == 'Once upon a line'

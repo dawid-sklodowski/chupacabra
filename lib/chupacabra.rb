@@ -50,6 +50,7 @@ end
 
 require 'chupacabra/system'
 require 'chupacabra/system/scripts'
+require 'chupacabra/system/install'
 require 'chupacabra/crypto'
 require 'chupacabra/storage'
 require 'chupacabra/version'

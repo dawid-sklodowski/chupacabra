@@ -21,7 +21,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-i", "--install", "Install Apple service") do |port|
-    Chupacabra::System.install
+    Chupacabra::System::Install.install
     puts "Service installed in #{Chupacabra::System.user_service_path}"
     puts ""
     puts "You can create keyboard shortcut with:"
@@ -36,7 +36,7 @@ OptionParser.new do |opts|
   end
 
   opts.on("-u", "--uninstall", "Uninstall Apple service") do |port|
-    Chupacabra::System.uninstall
+    Chupacabra::System::Install.uninstall
     puts "Service removed from #{Chupacabra::System.user_service_path}"
     exit
   end
