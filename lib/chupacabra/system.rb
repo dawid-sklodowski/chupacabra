@@ -103,14 +103,11 @@ module Chupacabra
     private
 
     def run_script(options ={})
+      return if Chupacabra.test? or !Chupacabra::System.osx?
       script = options.fetch(:script)
       compile_argument = options.fetch(:compile_argument, nil)
       arguments = options.fetch(:arguments) { [] }
-
-      script_file = Chupacabra::System::Scripts.script_file(script, compile_argument)
-      script_file = Chupacabra::System::Scripts.compile(script, compile_arugment) unless File.exists?(script_file)
-      raise 'No script to execute' unless script_file
-      return if Chupacabra.test? or !Chupacabra::System.osx?
+      script_file = Chupacabra::System::Scripts.script_or_compile(script, compile_argument)
       script = "osascript #{script_file} #{arguments.collect{ |arg| "'" + arg + "'" }.join(' ') }"
       System.log(script)
       `#{ script }`

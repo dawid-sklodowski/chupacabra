@@ -28,6 +28,11 @@ module Chupacabra
         scripts_path + "#{script}#{argument}.scpt"
       end
 
+      def script_or_compile(script, argument = nil)
+        return script_file(script, argument) if File.exist?(script_file(script, argument))
+        compile(script, argument) or raise "Can't compile #{script}#{' with arugment' + argument if argument}"
+      end
+
       def front_app
         <<-SCPT
           tell application "System Events"
