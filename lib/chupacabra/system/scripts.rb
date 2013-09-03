@@ -6,6 +6,7 @@ module Chupacabra
       class Error < Chupacabra::System::Error; end
 
       def compile_all
+        scripts_path.mkpath unless scripts_path.exist?
         clear_scripts
         [:front_app, :paste_clipboard, :alert, :ask_for_password].each do |script|
           compile(script)
@@ -108,7 +109,7 @@ module Chupacabra
       end
 
       def scripts_path
-        Chupacabra.root + 'osx' + 'apple_scripts'
+        Chupacabra::Storage.path + 'apple_scripts'
       end
 
       def clear_scripts
@@ -117,3 +118,4 @@ module Chupacabra
     end
   end
 end
+

@@ -1,7 +1,11 @@
 require 'spec_helper'
 
 describe Chupacabra::System::Scripts do
-  let(:file_path) { Chupacabra.root + 'osx' + 'apple_scripts' + 'get_browser_url_google_chrome.scpt' }
+  let(:file_path) { Chupacabra.root + 'tmp' + '.chupacabra' + 'apple_scripts' + 'get_browser_url_google_chrome.scpt' }
+
+  before do
+    file_path.dirname.mkpath unless file_path.dirname.exist?
+  end
 
   after do
     file_path.delete if file_path.exist?

@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Chupacabra
   extend self
 
@@ -32,6 +34,16 @@ module Chupacabra
     Pathname.new(File.expand_path('../..', __FILE__))
   end
 
+  def tmp_dir
+    dir = root + 'tmp'
+    dir.mkpath unless dir.exist?
+    dir
+  end
+
+  def clear_tmp
+    FileUtils.rm_rf(tmp_dir)
+  end
+
   private
 
   def output(text)
@@ -50,6 +62,7 @@ end
 
 require 'chupacabra/system'
 require 'chupacabra/system/scripts'
+require 'chupacabra/system/install'
 require 'chupacabra/crypto'
 require 'chupacabra/storage'
 require 'chupacabra/version'
