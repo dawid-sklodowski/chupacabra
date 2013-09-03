@@ -22,7 +22,7 @@ OptionParser.new do |opts|
 
   opts.on("-i", "--install", "Install Apple service") do |port|
     Chupacabra::System::Install.install
-    puts "Service installed in #{Chupacabra::System.user_service_path}"
+    puts "Service installed in #{Chupacabra::System::Install.user_service_path}"
     puts ""
     puts "You can create keyboard shortcut with:"
     puts "System Preferences -> Keyboard -> Keyboard Shortcuts -> Services -> Chupacabra"

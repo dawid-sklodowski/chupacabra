@@ -14,6 +14,14 @@ module Chupacabra
         FileUtils.rm_rf user_service_path
       end
 
+      def user_service_path
+        if Chupacabra.test?
+          Chupacabra.root + 'tmp' + 'Library' + 'Services' + 'Chupacabra.workflow'
+        else
+          Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
+        end
+      end
+
       private
 
       def install_service
@@ -27,18 +35,10 @@ module Chupacabra
         end
       end
 
-      def user_service_path
-        if Chupacabra.test?
-          Chupacabra.root + 'tmp' + 'Library' + 'Services' + 'Chupacabra.workflow'
-        else
-          Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
-        end
-      end
-
       def handle_legacy_file
         return unless legacy_passwords_path.file?
         legacy_passwords_path.rename(legacy_passwords_path_tmp)
-        legacy_passwords_path.rename(Chupacabra::Storage.passwords_path)
+        legacy_passwords_path_tmp.rename(Chupacabra::Storage.passwords_path)
       end
 
       def update_version
@@ -46,7 +46,7 @@ module Chupacabra
       end
 
       def legacy_passwords_path
-        if Chupacabra.test?
+        unless Chupacabra.test?
           Pathname.new(ENV['HOME']) + '.chupacabra'
         else
           Chupacabra.tmp_dir + '.chupacabra'
