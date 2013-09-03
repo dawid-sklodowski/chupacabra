@@ -29,23 +29,34 @@ module Chupacabra
 
       def user_service_path
         if Chupacabra.test?
-          Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
+          Chupacabra.root + 'tmp' + 'Library' + 'Services' + 'Chupacabra.workflow'
         else
           Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
         end
       end
 
       def handle_legacy_file
-        legacy_passwords_file = Pathname.new(ENV['HOME']) + '.chupacabra'
-        return unless legacy_passwords_file.file?
-        temporary_passwords_file = Pathname.new(ENV['HOME'] + '.chupacabra_tmp')
-        legacy_passwords_file.rename(temporary_passwords_file)
-        temporary_passwords_file.rename(Chupacabra::Storage.passwords_path)
+        return unless legacy_passwords_path.file?
+        legacy_passwords_path.rename(legacy_passwords_path_tmp)
+        legacy_passwords_path.rename(Chupacabra::Storage.passwords_path)
       end
 
       def update_version
         Chupacabra::Storage.version_path.open('w') { |file| file << Chupacabra::VERSION }
       end
+
+      def legacy_passwords_path
+        if Chupacabra.test?
+          Pathname.new(ENV['HOME']) + '.chupacabra'
+        else
+          Chupacabra.tmp_dir + '.chupacabra'
+        end
+      end
+
+      def legacy_passwords_path_tmp
+        Pathname.new(legacy_passwords_path.to_s + '_tmp')
+      end
+
     end
   end
 end

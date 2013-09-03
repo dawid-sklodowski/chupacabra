@@ -31,18 +31,6 @@ describe Chupacabra::System do
     end
   end
 
-  describe 'install' do
-    after do
-      Chupacabra::System.uninstall
-    end
-
-    it 'creates service directory' do
-      Chupacabra::System.user_service_path.should_not be_exist
-      Chupacabra::System.install
-      Chupacabra::System.user_service_path.should be_exist
-    end
-  end
-
   describe '.execute' do
     it 'returns passed string in test' do
       described_class.execute('Once upon a line').should == 'Once upon a line'

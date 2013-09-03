@@ -1,3 +1,5 @@
+require 'fileutils'
+
 module Chupacabra
   extend self
 
@@ -30,6 +32,16 @@ module Chupacabra
 
   def root
     Pathname.new(File.expand_path('../..', __FILE__))
+  end
+
+  def tmp_dir
+    dir = root + 'tmp'
+    dir.mkpath unless dir.exist?
+    dir
+  end
+
+  def clear_tmp
+    FileUtils.rm_rf(tmp_dir)
   end
 
   private

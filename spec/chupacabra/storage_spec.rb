@@ -2,16 +2,20 @@ require 'spec_helper'
 
 describe Chupacabra::Storage do
 
-  describe '.filepath' do
-     it { Chupacabra::Storage.filepath.to_s.should == File.join(Chupacabra.root, '.chupacabra') }
+  describe '.path' do
+    it { Chupacabra::Storage.path.to_s.should == File.join(Chupacabra.root, 'tmp', '.chupacabra') }
+  end
+
+  describe '.passwords_path' do
+    it { Chupacabra::Storage.passwords_path.to_s.should == File.join(Chupacabra.root, 'tmp', '.chupacabra', 'pw') }
   end
 
   describe '.clear' do
     it 'deletes file with data' do
-      Chupacabra::Storage.filepath.open('w') { |file| file << 'some data' }
-      Chupacabra::Storage.filepath.should be_exist
+      Chupacabra::Storage.passwords_path.open('w') { |file| file << 'some data' }
+      Chupacabra::Storage.passwords_path.should be_exist
       Chupacabra::Storage.clear
-      Chupacabra::Storage.filepath.should_not be_exist
+      Chupacabra::Storage.passwords_path.should_not be_exist
     end
   end
 
@@ -25,9 +29,9 @@ describe Chupacabra::Storage do
       end
 
       it 'saves to encrypted file' do
-        Chupacabra::Storage.filepath.should_not be_exist
+        Chupacabra::Storage.passwords_path.should_not be_exist
         subject['key'] = 'value'
-        contents = Chupacabra::Storage.filepath.read
+        contents = Chupacabra::Storage.passwords_path.read
         contents.length.should > 0
         contents.should_not =~ /value/
         contents.should_not =~ /key/

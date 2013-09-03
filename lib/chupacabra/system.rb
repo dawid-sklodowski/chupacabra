@@ -14,7 +14,7 @@ module Chupacabra
     def execute(command, run_in_test = false)
       log(command)
       if Chupacabra.test? && !run_in_test
-        `echo '#{command.gsub(/'/, "\'")}'`
+        `echo #{command}`
       else
         log(command)
         `#{command}`

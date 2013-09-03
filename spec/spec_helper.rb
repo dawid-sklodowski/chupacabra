@@ -10,7 +10,7 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   config.order = 'random'
-  config.before(:each) { Chupacabra::System.clear; Chupacabra::Storage.clear }
-  config.after(:each) { Chupacabra::System.clear; Chupacabra::Storage.clear }
+  config.before(:each) { Chupacabra::System.clear; Chupacabra::Storage.clear; Chupacabra.clear_tmp }
+  config.after(:each) { Chupacabra::System.clear; Chupacabra::Storage.clear; Chupacabra.clear_tmp }
 end
 
