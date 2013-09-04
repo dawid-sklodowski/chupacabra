@@ -1,10 +1,10 @@
-require 'chupacabra/system'
-require 'chupacabra/crypto'
-require 'chupacabra/storage'
-require 'chupacabra/version'
+require 'fileutils'
 
 module Chupacabra
   extend self
+
+  class Error < StandardError; end
+
   attr_accessor :env
   attr_accessor :log
 
@@ -30,10 +30,27 @@ module Chupacabra
     env == 'test'
   end
 
+  def root
+    Pathname.new(File.expand_path('../..', __FILE__))
+  end
+
+  def tmp_dir
+    dir = root + 'tmp'
+    dir.mkpath unless dir.exist?
+    dir
+  end
+
+  def clear_tmp
+    FileUtils.rm_rf(tmp_dir)
+  end
+
   private
 
   def output(text)
-    System.set_clipboard(text) if System.osx?
+    if System.osx?
+      System.set_clipboard(text)
+      System.paste_clipboard unless Chupacabra.test?
+    end
     text
   end
 
@@ -42,3 +59,11 @@ module Chupacabra
     "web: #{$1}" if key =~ /https?\:\/\/(?:www.)?([^\/\?]+)/
   end
 end
+
+require 'chupacabra/system'
+require 'chupacabra/system/scripts'
+require 'chupacabra/system/install'
+require 'chupacabra/crypto'
+require 'chupacabra/storage'
+require 'chupacabra/version'
+require 'pathname'

@@ -1,3 +1,5 @@
+# encoding: UTF-8
+
 require 'spec_helper'
 require 'digest'
 
@@ -7,7 +9,7 @@ describe Chupacabra::System do
 
   before do
     pending 'Works on MacOS only' unless Chupacabra::System.osx?
-    described_class.stub(:ask_for_password =>  "text returned:#{password}, button returned:OK\n")
+    described_class.stub(:ask_for_password =>  "«class ttxt»:#{password}, «class bhit»:OK\n")
   end
 
   describe '.get password' do
@@ -31,33 +33,13 @@ describe Chupacabra::System do
     end
   end
 
-  describe 'install' do
-    after do
-      Chupacabra::System.uninstall
+  describe '.execute' do
+    it 'returns passed string in test' do
+      described_class.execute('Once upon a line').should == 'Once upon a line'
     end
 
-    it 'creates service directory' do
-      Chupacabra::System.user_service_path.should_not be_exist
-      Chupacabra::System.install
-      Chupacabra::System.user_service_path.should be_exist
-    end
-  end
-
-  describe 'uninstall' do
-    before do
-      Chupacabra::System.install
-    end
-
-    it 'deletes service directory' do
-      Chupacabra::System.user_service_path.should be_exist
-      Chupacabra::System.uninstall
-      Chupacabra::System.user_service_path.should_not be_exist
-    end
-  end
-
-  describe 'user_service_path' do
-    it 'is correct' do
-      Chupacabra::System.user_service_path.should == Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
+    it 'executes command if true passed as second argument' do
+      described_class.execute('echo "Hacky"', true).should == 'Hacky'
     end
   end
 end

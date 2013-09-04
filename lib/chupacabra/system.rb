@@ -7,6 +7,20 @@ module Chupacabra
   module System
     extend self
 
+    class Error < Chupacabra::Error; end
+
+    BROWSERS = ['Google Chrome', 'Google Chrome Canary', 'Camino', 'Safari', 'Webkit', 'Opera', 'Firefox']
+
+    def execute(command, run_in_test = false)
+      log(command)
+      if Chupacabra.test? && !run_in_test
+        `echo #{command}`
+      else
+        log(command)
+        `#{command}`
+      end.strip
+    end
+
     def get_password
       return get_env_password unless get_env_password.empty?
       password = Digest::SHA1.hexdigest(get_password_from_dialog)
@@ -16,16 +30,16 @@ module Chupacabra
     end
 
     def clear
-      `launchctl unsetenv #{password_variable}` if osx?
+      System.execute("launchctl unsetenv #{password_variable}")
     end
 
     def get_clipboard
-      `pbpaste`.strip
+      System.execute("pbpaste", osx?).strip
     end
 
     def set_clipboard(text)
       raise 'Unsupported string' if text =~ /'/
-      `echo '#{text}' | pbcopy`
+      System.execute("echo '#{text}' | pbcopy", osx?)
     end
 
     def osx?
@@ -37,74 +51,24 @@ module Chupacabra
     end
 
     def front_app
-      run_script(
-        <<-EOS
-          tell application "System Events"
-            return name of first application process whose frontmost is true
-          end tell
-        EOS
-      )
+      run_script(:script => :front_app)
     end
 
     def get_browser_url
       app = front_app
-      run_script(
-        case app
-          when 'Google Chrome', 'Google Chrome Canary'
-            %Q(tell application "#{app}" to return URL of active tab of front window)
-          when 'Camino'
-            %Q(tell application "#{app}" to return URL of current tab of front browser window)
-          when 'Safari', 'Webkit', 'Opera'
-            %Q(tell application "#{app}" to return URL of front document)
-          when 'firefox'
-            <<-EOS
-              tell application "System Events"
-                keystroke "l" using command down
-                keystroke "c" using command down
-              end tell
-              delay 0.1
-              return the clipboard
-            EOS
-        end
-      )
+      return unless BROWSERS.include?(app)
+      run_script(:script => :get_browser_url, :compile_argument => app)
+    end
+
+    def paste_clipboard
+      run_script(:script => :paste_clipboard)
     end
 
     def alert(message)
-      run_script(
-        <<-EOS
-          tell application "#{front_app}"
-            activate
-            display alert "#{message}" as warning
-          end tell
-        EOS
-      )
+      run_script(:script => :alert, :arguments => [front_app, message])
     end
 
-    def install
-      user_service_contents = user_service_path + 'Contents'
-      user_service_contents.mkpath unless user_service_contents.exist?
-      chupacabra_service_contents = Pathname.new(
-        File.expand_path('../../../osx/Chupacabra.workflow/Contents', __FILE__)
-      )
 
-      %w(document.wflow Info.plist).each do |filename|
-        (user_service_contents + filename).open('w') do |file|
-          file << (chupacabra_service_contents + filename).read
-        end
-      end
-    end
-
-    def uninstall
-      FileUtils.rm_rf user_service_path
-    end
-
-    def user_service_path
-      if Chupacabra.test?
-        Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra_test.workflow'
-      else
-        Pathname.new(ENV['HOME']) + 'Library/Services/Chupacabra.workflow'
-      end
-    end
 
     def log(message)
       return unless Chupacabra.log
@@ -116,15 +80,23 @@ module Chupacabra
     end
 
     def log_path
-      (Pathname.new(ENV['HOME']) + 'chupacabra.log')
+      if Chupacabra.test?
+        (Chupacabra.root + 'log' + 'chupacabra_test.log')
+      else
+        (Pathname.new(ENV['HOME']) + 'chupacabra.log')
+      end
     end
 
     private
 
-    def run_script(script)
-      return unless script
-      raise ArgumentError, "Script can't contain single quotes" if script =~ /'/
-      `osascript #{script.split("\n").collect{|line| " -e '#{line.strip}'"}.join}`.strip
+    def run_script(options ={})
+      return if Chupacabra.test? or !Chupacabra::System.osx?
+      script = options.fetch(:script)
+      compile_argument = options.fetch(:compile_argument, nil)
+      arguments = options.fetch(:arguments) { [] }
+      script_file = Chupacabra::System::Scripts.script_or_compile(script, compile_argument)
+      script = "osascript #{script_file} #{arguments.collect{ |arg| "'" + arg + "'" }.join(' ') }"
+      System.execute(script)
     end
 
     def password_variable
@@ -136,31 +108,20 @@ module Chupacabra
     end
 
     def strip_dialog_response(response)
-      response.match(/text returned:(.+), button returned:OK/)[1]
+      System.log(response)
+      response.match(/.class ttxt.:(.+), .class bhit.:OK/)[1]
     end
 
     def ask_for_password
-      dialog = 'display dialog "Enter Chupacabra password"' +
-        'default answer ""' +
-        'with title "Chupacabra"' +
-        'with icon caution with hidden answer'
-
-      script = <<-EOS
-        tell application "#{front_app}"
-          activate
-          #{dialog}
-        end tell
-      EOS
-
-      run_script(script)
+      run_script(:script => :ask_for_password, :arguments => [front_app])
     end
 
     def get_env_password
-      `launchctl getenv #{password_variable}`.strip
+      System.execute("launchctl getenv #{password_variable}", true).strip
     end
 
     def set_env_password(password)
-      `launchctl setenv #{password_variable} '#{password}'`
+      System.execute("launchctl setenv #{password_variable} '#{password}'", true)
     end
   end
 end

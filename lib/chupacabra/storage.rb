@@ -1,14 +1,32 @@
 require 'pathname'
+require 'fileutils'
 
 module Chupacabra
   class Storage
 
-    def self.filepath
-      Pathname.new(ENV['HOME']) + filename
+    class Error < Chupacabra::Error; end
+
+    def self.path
+      path = if Chupacabra.test?
+        Chupacabra.root + 'tmp' + '.chupacabra'
+      else
+        Pathname.new(ENV['HOME']) + '.chupacabra'
+      end
+      raise Error, 'Chupacabra path cant be a file' if path.file?
+      path.mkpath unless path.exist?
+      path
+    end
+
+    def self.passwords_path
+      path + 'pw'
     end
 
     def self.clear
-      filepath.unlink if filepath.exist?
+      FileUtils.rm_rf(path)
+    end
+
+    def self.version_path
+      path + 'version'
     end
 
     def initialize(password)
@@ -30,21 +48,17 @@ module Chupacabra
 
     private
 
-    def self.filename
-      Chupacabra.test? ? '.chupacabra_test' : '.chupacabra'
-    end
-
     def data
       @data ||=
-      if File.exists?(self.class.filepath)
-        Marshal.load(Crypto.decrypt(File.read(self.class.filepath), @password))
+      if File.exists?(self.class.passwords_path)
+        Marshal.load(Crypto.decrypt(File.read(self.class.passwords_path), @password))
       else
         { }
       end
     end
 
     def save
-      File.open(self.class.filepath, 'w') do |file|
+      File.open(self.class.passwords_path, 'w') do |file|
         file <<  Crypto.encrypt(Marshal.dump(@data), @password)
       end
     end
