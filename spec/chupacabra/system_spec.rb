@@ -42,4 +42,23 @@ describe Chupacabra::System do
       described_class.execute('echo "Hacky"', true).should == 'Hacky'
     end
   end
+
+  describe '.log' do
+    before do
+      Chupacabra.log = true
+    end
+
+    subject { (Chupacabra::Storage.path + 'chupacabra.log').read.strip }
+
+    it 'logs into file' do
+      Chupacabra::System.log('Keep your passwords safe!')
+      subject.should == 'Keep your passwords safe!'
+    end
+
+    it 'appends to file' do
+      Chupacabra::System.log('Line 1')
+      Chupacabra::System.log('Line 2')
+      subject.should == "Line 1\nLine 2"
+    end
+  end
 end

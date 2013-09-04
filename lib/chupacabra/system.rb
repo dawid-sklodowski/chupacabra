@@ -68,8 +68,6 @@ module Chupacabra
       run_script(:script => :alert, :arguments => [front_app, message])
     end
 
-
-
     def log(message)
       return unless Chupacabra.log
       log_path.open('a') do |file|
@@ -79,15 +77,11 @@ module Chupacabra
       message
     end
 
-    def log_path
-      if Chupacabra.test?
-        (Chupacabra.root + 'log' + 'chupacabra_test.log')
-      else
-        (Pathname.new(ENV['HOME']) + 'chupacabra.log')
-      end
-    end
-
     private
+
+    def log_path
+      Chupacabra::Storage.path + 'chupacabra.log'
+    end
 
     def run_script(options ={})
       return if Chupacabra.test? or !Chupacabra::System.osx?
@@ -117,11 +111,11 @@ module Chupacabra
     end
 
     def get_env_password
-      System.execute("launchctl getenv #{password_variable}", true).strip
+      System.execute("launchctl getenv #{password_variable}", osx?).strip
     end
 
     def set_env_password(password)
-      System.execute("launchctl setenv #{password_variable} '#{password}'", true)
+      System.execute("launchctl setenv #{password_variable} '#{password}'", osx?)
     end
   end
 end
