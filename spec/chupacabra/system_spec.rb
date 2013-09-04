@@ -15,10 +15,12 @@ describe Chupacabra::System do
     subject { described_class.get_password }
 
     it 'returns password sha1 hash' do
+      pending 'Works on MacOS only' unless Chupacabra::System.osx?
       subject.should == Digest::SHA1.hexdigest(password)
     end
 
     it 'stores once provided password as SHA1' do
+      pending 'Works on MacOS only' unless Chupacabra::System.osx?
       password = described_class.get_password
       described_class.stub(:ask_for_password =>  "Something different")
       subject.should == password
@@ -27,6 +29,7 @@ describe Chupacabra::System do
 
   describe 'clipboard operations' do
     it 'saves and loads from clipboard' do
+      pending 'Works on MacOS only' unless Chupacabra::System.osx?
       described_class.set_clipboard('testing clipboard')
       described_class.get_clipboard.should == 'testing clipboard'
     end
