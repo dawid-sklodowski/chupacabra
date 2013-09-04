@@ -19,6 +19,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'pry'
+  s.add_development_dependency 'coveralls'
   s.executables = ['chupacabra']
   s.post_install_message = <<-EOS
     Thank you for installing chupacabra.

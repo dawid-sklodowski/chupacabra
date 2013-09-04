@@ -4,6 +4,7 @@ chupacabra
 [![Gem Version](https://badge.fury.io/rb/chupacabra.png)](http://badge.fury.io/rb/chupacabra)
 [![Build Status](https://travis-ci.org/dawid-sklodowski/chupacabra.png)](https://travis-ci.org/dawid-sklodowski/chupacabra)
 [![Code Climate](https://codeclimate.com/github/dawid-sklodowski/chupacabra.png)](https://codeclimate.com/github/dawid-sklodowski/chupacabra)
+[![Coverage Status](https://coveralls.io/repos/dawid-sklodowski/chupacabra/badge.png)](https://coveralls.io/r/dawid-sklodowski/chupacabra)
 
 A personal, encrypted password keychain.
 
