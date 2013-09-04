@@ -15,7 +15,10 @@ describe Chupacabra::System::Install do
       user_service_path.should_not be_exist
     end
 
-    it 'removes chupacabra settings'
+    it 'removes chupacabra settings' do
+      Chupacabra::System::Install.uninstall
+      (Chupacabra.root + 'tmp' + '.chupacabra').should_not be_exist
+    end
   end
 
   describe 'install' do
@@ -33,7 +36,14 @@ describe Chupacabra::System::Install do
       user_service_path.should be_exist
     end
 
-    it 'compiles scripts'
-    it 'updates version'
+    it 'compiles scripts' do
+      Chupacabra::System::Scripts.should_receive(:compile_all)
+      Chupacabra::System::Install.install
+    end
+
+    it 'updates version' do
+      Chupacabra::System::Install.install
+      (Chupacabra.root + 'tmp' + '.chupacabra' + 'version').read.should == Chupacabra::VERSION
+    end
   end
 end

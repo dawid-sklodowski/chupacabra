@@ -1,3 +1,5 @@
+require "stringio"
+
 module Chupacabra
   module System
     module Install
@@ -12,6 +14,7 @@ module Chupacabra
 
       def uninstall
         FileUtils.rm_rf user_service_path
+        FileUtils.rm_rf Chupacabra::Storage.path
       end
 
       def user_service_path
@@ -56,7 +59,6 @@ module Chupacabra
       def legacy_passwords_path_tmp
         Pathname.new(legacy_passwords_path.to_s + '_tmp')
       end
-
     end
   end
 end
