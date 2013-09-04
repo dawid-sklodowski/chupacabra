@@ -19,14 +19,8 @@ module Chupacabra
       def compile(script, argument = nil)
         script_body = self.send(*[script, argument].compact)
         raise Error, 'Empty script to compile' if script_body.empty?
-        output = System.execute "osacompile -e '#{script_body}' -o #{script_file(script, argument)}"
-        if $?.success?
-          output
-        else
-          puts "Failed to compile: #{script_file(script, argument)}"
-          puts output
-          nil
-        end
+        output = System.execute "osacompile -e '#{script_body}' -o #{script_file(script, argument)} 2> /dev/null"
+        output if $?.success?
       end
 
       def script_or_compile(script, argument = nil)
