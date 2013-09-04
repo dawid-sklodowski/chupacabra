@@ -75,13 +75,13 @@ module Chupacabra
         file << "\n"
       end
       message
-    end
+   end
+
+   def log_path
+     Chupacabra::Storage.path + 'chupacabra.log'
+   end
 
     private
-
-    def log_path
-      Chupacabra::Storage.path + 'chupacabra.log'
-    end
 
     def run_script(options ={})
       return if Chupacabra.test? or !Chupacabra::System.osx?
