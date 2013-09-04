@@ -34,12 +34,12 @@ module Chupacabra
     end
 
     def get_clipboard
-      System.execute("pbpaste", true).strip
+      System.execute("pbpaste", osx?).strip
     end
 
     def set_clipboard(text)
       raise 'Unsupported string' if text =~ /'/
-      System.execute("echo '#{text}' | pbcopy", true)
+      System.execute("echo '#{text}' | pbcopy", osx?)
     end
 
     def osx?
