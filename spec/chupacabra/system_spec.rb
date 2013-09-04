@@ -8,7 +8,6 @@ describe Chupacabra::System do
   let(:password) { "asd\" '," }
 
   before do
-    pending 'Works on MacOS only' unless Chupacabra::System.osx?
     described_class.stub(:ask_for_password =>  "«class ttxt»:#{password}, «class bhit»:OK\n")
   end
 
