@@ -2,8 +2,10 @@ require 'spec_helper'
 
 describe Chupacabra do
   describe '.get_password' do #Rename this method
+    let(:random_global_password) { Chupacabra::Crypto.generate_password }
+
     before do
-      Chupacabra::System.stub(:get_password => 'password')
+      Chupacabra::System.stub(:get_password => random_global_password)
       Chupacabra::System.stub(:get_browser_url => 'http://www.key')
     end
 
