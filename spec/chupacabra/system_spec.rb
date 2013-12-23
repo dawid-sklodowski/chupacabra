@@ -62,5 +62,19 @@ describe Chupacabra::System do
       Chupacabra::System.log('Line 2')
       subject.should == "Line 1\nLine 2"
     end
+
+    it 'logs when forced even if logging is disabled' do
+      Chupacabra.log = false
+      Chupacabra::System.log('Forced log line', true)
+      subject.should == 'Forced log line'
+    end
+
+    it 'does not log when logging disabled' do
+      Chupacabra.log = false
+      Chupacabra::System.log('I am invisible')
+      expect {
+        subject
+      }.to raise_error(Errno::ENOENT)
+    end
   end
 end

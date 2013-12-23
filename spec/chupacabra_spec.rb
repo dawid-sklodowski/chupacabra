@@ -66,5 +66,14 @@ describe Chupacabra do
       Chupacabra::System.should_receive(:clear).at_least(1).times
       Chupacabra.get_password
     end
+
+    it 'logs and reraises other exceptions' do
+      Chupacabra::Storage.stub(:new).and_raise(Exception.new('I am evil exception'))
+      expect {
+        Chupacabra.get_password
+      }.to raise_error
+      File.read(Chupacabra::System.log_path).should =~ /Exception: I am evil exception/
+    end
+
   end
 end

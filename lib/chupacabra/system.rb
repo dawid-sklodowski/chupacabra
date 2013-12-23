@@ -68,8 +68,8 @@ module Chupacabra
       run_script(:script => :alert, :arguments => [front_app, message])
     end
 
-    def log(message)
-      return unless Chupacabra.log
+    def log(message, force = false)
+      return unless Chupacabra.log || force
       log_path.open('a') do |file|
         file << message
         file << "\n"
