@@ -13,11 +13,11 @@ module Chupacabra
       encrypter = OpenSSL::Cipher::Cipher.new 'AES256'
       encrypter.encrypt
       encrypter.pkcs5_keyivgen password
-      Base64.strict_encode64(encrypter.update(text) + encrypter.final)
+      Base64.encode64(encrypter.update(text) + encrypter.final)
     end
 
     def decrypt(text, password)
-      encrypted = Base64.strict_decode64(text)
+      encrypted = Base64.decode64(text)
       decrypter = OpenSSL::Cipher::Cipher.new 'AES256'
       decrypter.decrypt
       decrypter.pkcs5_keyivgen password
