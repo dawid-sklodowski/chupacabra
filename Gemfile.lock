@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     chupacabra (1.0.0)
+      json
 
 GEM
   remote: https://rubygems.org/
@@ -15,6 +16,7 @@ GEM
       simplecov (>= 0.7)
       thor
     diff-lcs (1.2.4)
+    json (1.8.1)
     method_source (0.8.2)
     mime-types (1.25)
     multi_json (1.7.9)
