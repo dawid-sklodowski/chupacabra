@@ -13,12 +13,15 @@ module Chupacabra
 
     def execute(command, run_in_test = false)
       log(command)
-      if Chupacabra.test? && !run_in_test
+      output = if Chupacabra.test? && !run_in_test
         `echo #{command}`
       else
         log(command)
         `#{command}`
-      end.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "").strip
+      end
+
+      output.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "") if output.respond_to?(:encode!)
+      output.strip
     end
 
     def get_password
