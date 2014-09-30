@@ -1,5 +1,6 @@
 require 'pathname'
 require 'fileutils'
+require 'json'
 
 module Chupacabra
   class Storage
@@ -51,7 +52,7 @@ module Chupacabra
     def data
       @data ||=
       if File.exists?(self.class.passwords_path)
-        Marshal.load(Crypto.decrypt(File.read(self.class.passwords_path), @password))
+        JSON.parse(Crypto.decrypt(File.read(self.class.passwords_path), @password))
       else
         { }
       end
@@ -59,7 +60,7 @@ module Chupacabra
 
     def save
       File.open(self.class.passwords_path, 'w') do |file|
-        file <<  Crypto.encrypt(Marshal.dump(@data), @password)
+        file <<  Crypto.encrypt(@data.to_json, @password)
       end
     end
   end

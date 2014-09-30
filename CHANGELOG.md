@@ -1,5 +1,9 @@
 ## Chupacabra changelog
 
+#### 1.0.0
+  - JSON used as internal format for storing passwords hash (instead of Marshal).
+    Data stored with previous versions of chupacabra will be incompatible.
+
 #### 0.2.1
  - Option to forget chupacabra main password on given machine
 
