@@ -5,7 +5,8 @@ require 'digest'
 
 describe Chupacabra::System do
 
-  let(:password) { "asd\" '," }
+  let(:password) { "asd\" ',a" }
+  let(:matched_password) { "asd\" '" }
 
   before do
     described_class.stub(:ask_for_password =>  "«class ttxt»:#{password}, «class bhit»:OK\n")
@@ -16,7 +17,7 @@ describe Chupacabra::System do
 
     it 'returns password sha1 hash' do
       pending 'Works on MacOS only' unless Chupacabra::System.osx?
-      subject.should == Digest::SHA1.hexdigest(password)
+      subject.should == Digest::SHA1.hexdigest(matched_password)
     end
 
     it 'stores once provided password as SHA1' do

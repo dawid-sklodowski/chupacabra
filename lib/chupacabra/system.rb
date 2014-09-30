@@ -30,7 +30,7 @@ module Chupacabra
     end
 
     def clear
-      System.execute("launchctl unsetenv #{password_variable}")
+      System.execute("launchctl unsetenv #{password_variable}", osx?)
     end
 
     def get_clipboard
@@ -103,7 +103,7 @@ module Chupacabra
 
     def strip_dialog_response(response)
       System.log(response)
-      response.match(/.class ttxt.:(.+), .class bhit.:OK/)[1]
+      response.match(/.class ttxt.:([^,]+)/)[1]
     end
 
     def ask_for_password
