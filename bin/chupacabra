@@ -20,6 +20,12 @@ OptionParser.new do |opts|
     exit
   end
 
+  opts.on("-f", "--forget", "Forget chupacabra main password stored in memory") do
+    Chupacabra::System.clear
+    puts "This machine won't know your main chupacabra password any more."
+    exit
+  end
+
   opts.on("-i", "--install", "Install Apple service") do |port|
     Chupacabra::System::Install.install
     puts "Service installed in #{Chupacabra::System::Install.user_service_path}"

@@ -18,7 +18,7 @@ module Chupacabra
       else
         log(command)
         `#{command}`
-      end.strip
+      end.encode!('UTF-8', :undef => :replace, :invalid => :replace, :replace => "").strip
     end
 
     def get_password

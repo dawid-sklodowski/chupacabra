@@ -1,5 +1,8 @@
 ## Chupacabra changelog
 
+#### 0.2.1
+ - Option to forget chupacabra main password on given machine
+
 #### 0.1.3
  - Fix for 10.9.5+ (Mountain Lion+)
 
