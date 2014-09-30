@@ -103,7 +103,7 @@ module Chupacabra
 
     def strip_dialog_response(response)
       System.log(response)
-      response.match(/.class ttxt.:([^,]+)/)[1]
+      response.match(/.class ttxt[^:]*:([^,]+)/)[1]
     end
 
     def ask_for_password

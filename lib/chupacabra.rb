@@ -25,7 +25,7 @@ module Chupacabra
     System.alert('Wrong password!')
     'Wrong password'
   rescue Exception => e
-    System.log("#{e.class.name}: #{e.message}", true)
+    System.log("#{ e.class.name }: #{ e.message }\n #{ e.backtrace }", true)
     System.alert("Unexpected error, check log in: #{System.log_path}")
     raise e
   end
