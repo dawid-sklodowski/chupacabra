@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chupacabra (1.0.0)
+    chupacabra (1.0.1)
       json
 
 GEM
