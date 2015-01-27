@@ -1,5 +1,8 @@
 ## Chupacabra changelog
 
+#### 1.0.2
+  - Remove JSON gem dependency
+
 #### 1.0.1
   - JSON as gem dependency for older rubies compatibility.
 
