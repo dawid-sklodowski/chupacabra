@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    chupacabra (1.0.1)
+    chupacabra (1.0.2)
 
 GEM
   remote: https://rubygems.org/
