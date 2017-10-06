@@ -45,3 +45,6 @@ The global password is used to encrypt a file (`~/.chupacabra`) which stores all
 Chupacabra will ask you only once for your global password until you restart your computer.
 
 
+Copyright (c) 2013 [Lean Logics](http://leanlogics.com), released under the MIT license
+
+
